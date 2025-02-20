@@ -1,4 +1,4 @@
-import dbConnexion from './Config/dbconnexion.js';
+import pool from './Config/dbconnexion.js';
 import express from 'express';
 import dotenv from 'dotenv';
 
@@ -15,9 +15,9 @@ app.get('/', (req, res) => {
   res.status(200).send('Serveur en cours d\'execution');
 });
 
-app.get('/db', async (req, res) => {
+app.get('/testDb', async (req, res) => {
     try {
-      const [rows] = await dbConnexion.query('SELECT 1');
+      const [rows] = await pool.query('SELECT 1');
       res.json({ message: 'Connexion MySQL réussie !', result: rows });
     } catch (error) {
       res.status(500).json({ error: 'Erreur de connexion à MySQL', details: error.message});
