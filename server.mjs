@@ -2,16 +2,20 @@ import { createServer } from 'node:http';
 import express from 'express';
 import dotenv from 'dotenv';
 
+//Initialisation de notre application avec express
+const app = express();
 
 
-const server = createServer((req, res) => {
-  res.writeHead(200, { 'Content-Type': 'text/plain' });
-  res.end('Hello World!\n');
-});
+//Middlewares
+app.use(express.json());
+
+
+//Gestion du port 
+const PORT = process.env.PORT || 3000;
 
 // starts a simple http server locally on port 3000
-server.listen(3000, '127.0.0.1', () => {
-  console.log('Listening on 127.0.0.1:3000');
+app.listen(PORT, '127.0.0.1', () => {
+  console.log('Notre application a bien démarré : 127.0.0.1:3000');
 });
 
 // run with `node server.mjs`
