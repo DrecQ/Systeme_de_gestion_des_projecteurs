@@ -1,7 +1,11 @@
-import pool from './Config/dbconnexion.js';
 import express from 'express';
 import dotenv from 'dotenv';
 
+import {checkConnection, verifDatabase} from './Config/dbconnexion.js';
+import {createProjectorTable} from './Models/projectorModel.js';
+import {createUserTable} from './Models/usersModel.js';
+
+//Utilisation des variables d'environnement
 dotenv.config();
 
 //Initialisation de notre application avec express
@@ -10,19 +14,25 @@ const app = express();
 //Middlewares
 app.use(express.json());
 
+
+//Fonction pour créer la base de données et les tables 
+ 
+  async function initDatabase()
+  {
+      //Creation de la table users
+      await createUserTable();
+
+      //Creation de la table projector 
+      await createProjectorTable();
+  }
+
+  initDatabase();
+
 //Routes 
 app.get('/', (req, res) => {
   res.status(200).send('Serveur en cours d\'execution');
 });
 
-app.get('/testDb', async (req, res) => {
-    try {
-      const [rows] = await pool.query('SELECT 1');
-      res.json({ message: 'Connexion MySQL réussie !', result: rows });
-    } catch (error) {
-      res.status(500).json({ error: 'Erreur de connexion à MySQL', details: error.message});
-    }
-  });
 
  
 

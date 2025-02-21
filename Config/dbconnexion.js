@@ -1,52 +1,71 @@
-import mysql from 'mysql2';
+import mysql from 'mysql2/promise';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
-// Création d'un pool de connexions
+// Création d'un pool de connexions SANS spécifier la base (pour pouvoir la créer)
 const pool = mysql.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   port: process.env.DB_PORT,
+  password: process.env.DB_PASS, // Ajout du password
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
 });
 
-// Vérification la connexion
-pool.getConnection((err, connection) => {
-  if (err) {
+// Vérification de la connexion
+export async function checkConnection() {
+  try {
+    const connection = await pool.getConnection();
+    console.log('Connexion à MySQL réussie !');
+    connection.release();
+  } catch (err) {
     console.error('Erreur de connexion à MySQL :', err.message);
-    return;
   }
-  console.log('Connexion à MySQL réussie !');
-  connection.release();
-});
+}
 
-// Fonction asynchrone pour vérifier si la base de données existe déjà
-async function verifDtabase() {
+// Vérification et création de la base de données si elle n'existe pas
+export async function verifDatabase() {
   const dbName = process.env.DB_NAME;
   try {
-    // Vérifier si la base de données existe
-    const [rows] = await pool.promise().query(
+    const connection = await pool.getConnection();
+
+    // Vérifier si la base existe
+    const [rows] = await connection.query(
       "SELECT COUNT(*) AS count FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = ?",
       [dbName]
     );
 
-    // Création de la base de données si elle n'existe pas
     if (rows[0].count === 0) {
-      console.log('Base de données en cours de création');
-      await pool.promise().query(`CREATE DATABASE ${dbName}`);
-      console.log('Base de données créée');
+      console.log(`Base de données '${dbName}' en cours de création...`);
+      await connection.query(`CREATE DATABASE \`${dbName}\`;`);
+      console.log(`Base de données '${dbName}' créée avec succès !`);
     } else {
-      console.log('La base de données existe déjà');
+      console.log(`La base de données '${dbName}' existe déjà.`);
     }
+
+    connection.release();
+
   } catch (err) {
-    console.error('Erreur lors de la vérification des instances de base de données existantes :', err.message);
+    console.error('Erreur lors de la vérification/création de la base de données :', err.message);
   }
 }
 
-// Appel de la fonction de vérification
-verifDtabase();
+// Appel des fonctions
+await checkConnection();
+await verifDatabase();
 
-export default pool;
+// Création d'un pool avec la base de données sélectionnée
+const dbPool = mysql.createPool({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  port: process.env.DB_PORT,
+  password: process.env.DB_PASS,
+  database: process.env.DB_NAME, // Maintenant, on inclut la base
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
+});
+
+export default dbPool;
