@@ -3,12 +3,12 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-// Création d'un pool de connexions SANS spécifier la base (pour pouvoir la créer)
+// Création d'un pool de connexions sans spécifier la base (pour pouvoir la créer)
 const pool = mysql.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   port: process.env.DB_PORT,
-  password: process.env.DB_PASS, // Ajout du password
+  password: process.env.DB_PASS, 
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
