@@ -4,7 +4,7 @@
   - Postman, cUrl 
 - Pour démarrer le projet
    - npm run start
-- Dependance du projet
+- Dependances du projet
    - express
    - mysql2
    - dotenv
