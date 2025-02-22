@@ -1,14 +1,49 @@
-// server.mjs
-import { createServer } from 'node:http';
+import express from 'express';
+import dotenv from 'dotenv';
 
-const server = createServer((req, res) => {
-  res.writeHead(200, { 'Content-Type': 'text/plain' });
-  res.end('Hello World!\n');
+import {checkConnection, verifDatabase} from './Config/dbconnexion.js';
+import {createProjectorTable} from './Models/projectorModel.js';
+import {createUserTable} from './Models/usersModel.js';
+
+//Utilisation des variables d'environnement
+dotenv.config();
+
+//Initialisation de notre application avec express
+const app = express();
+
+//Middlewares
+app.use(express.json());
+
+
+//Fonction pour créer la base de données et les tables 
+ 
+  async function initDatabase()
+  {
+      //Creation de la table users
+      await createUserTable();
+
+      //Creation de la table projector 
+      await createProjectorTable();
+  }
+
+  initDatabase();
+
+//Routes 
+app.get('/', (req, res) => {
+  res.status(200).send('Serveur en cours d\'execution');
 });
 
+
+ 
+
+
+
+//Gestion du port 
+const port = process.env.PORT || 3000;
+
 // starts a simple http server locally on port 3000
-server.listen(3000, '127.0.0.1', () => {
-  console.log('Listening on 127.0.0.1:3000');
+app.listen(port, '127.0.0.1', () => {
+  console.log('Notre application a bien démarré : 127.0.0.1:3000');
 });
 
 // run with `node server.mjs`
