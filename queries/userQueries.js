@@ -1,6 +1,4 @@
-import dbPool from "../Config/dbconnexion";
-
-//Creation des différentes requêtes 
+//Requêtes 
 
 export const addUserQuery = `INSERT INTO into users(email, password, role) WHERE(?, ?, ?, ?)`;
 
