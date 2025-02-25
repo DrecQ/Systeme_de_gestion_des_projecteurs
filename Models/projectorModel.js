@@ -1,4 +1,4 @@
-import pool from "../Config/dbconnexion.js";
+import pool from "../Config/dbConnexion.js";
 import dotenv from 'dotenv';
 import * as queries from '../queries/projectorsQueries.js';
 
@@ -14,7 +14,7 @@ export async function createProjectorTable(){
         await connection.query(`USE \`${process.env.DB_NAME}\`;`)
         await connection.query(
             `CREATE TABLE IF NOT EXISTS projectors(
-                id INT AUTO_INCREMENT PRIMARY KEY,
+                projector_id INT AUTO_INCREMENT PRIMARY KEY,
                 nom_proj VARCHAR(30) NOT NULL UNIQUE,
                 batiment VARCHAR(255) NOT NULL,
                 etat enum('fonctionnel', 'en panne', 'hors service') NOT NULL DEFAULT 'fonctionnel',

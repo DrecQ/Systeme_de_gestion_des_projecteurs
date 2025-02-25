@@ -1,9 +1,8 @@
 import express from 'express';
 import dotenv from 'dotenv';
-
-import {checkConnection, verifDatabase} from './Config/dbconnexion.js';
 import {createProjectorTable} from './Models/projectorModel.js';
 import {createUserTable} from './Models/usersModel.js';
+import { createReservationTable } from './Models/reservationModel.js';
 
 //Utilisation des variables d'environnement
 dotenv.config();
@@ -22,8 +21,11 @@ app.use(express.json());
       //Creation de la table users
       await createUserTable();
 
-      //Creation de la table projector 
+      //Creation de la table projectors 
       await createProjectorTable();
+
+      //Création de la table reservations 
+      await createReservationTable();
   }
 
   initDatabase();
