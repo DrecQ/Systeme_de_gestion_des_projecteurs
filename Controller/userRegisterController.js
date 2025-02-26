@@ -1,4 +1,10 @@
+<<<<<<< HEAD
 import { getUserEmail, registerUser } from "../queries/userQueries.js";
+=======
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import { getUserEmail, registerUser } from "../queries/userQueries";
+>>>>>>> 841d8fc16a47fa2379c7b0ac7b68fc710ae2e3d4
 
 // Inscription d'un utilisateur
 export async function register(req, res) {
@@ -24,5 +30,8 @@ export async function register(req, res) {
         res.status(500).json({ success: false, error: err.message });
     }
 }
+<<<<<<< HEAD
 
 export default register;
+=======
+>>>>>>> 841d8fc16a47fa2379c7b0ac7b68fc710ae2e3d4
