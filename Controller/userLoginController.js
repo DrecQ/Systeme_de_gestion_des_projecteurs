@@ -1,11 +1,7 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-<<<<<<< HEAD
 import { getUserEmail } from "../queries/userQueries.js";
-=======
-import { getUserEmail } from "../queries/userQueries";
->>>>>>> 841d8fc16a47fa2379c7b0ac7b68fc710ae2e3d4
 
 
 dotenv.config();
@@ -38,8 +34,5 @@ export async function loginUser(req, res) {
         return res.status(500).json({ success: false, error: err.message });
     }
 }
-<<<<<<< HEAD
 
 export default loginUser;
-=======
->>>>>>> 841d8fc16a47fa2379c7b0ac7b68fc710ae2e3d4
