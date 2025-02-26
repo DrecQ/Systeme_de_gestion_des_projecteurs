@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import {createProjectorTable} from './Models/projectorModel.js';
 import {createUserTable} from './Models/usersModel.js';
 import { createReservationTable } from './Models/reservationModel.js';
+import Router from './Routes/routes.js';
 
 //Utilisation des variables d'environnement
 dotenv.config();
@@ -14,7 +15,7 @@ const app = express();
 app.use(express.json());
 
 
-//Fonction pour créer la base de données et les tables 
+//Fonctions pour créer la base de données et les tables 
  
   async function initDatabase()
   {
@@ -36,6 +37,7 @@ app.get('/', (req, res) => {
 });
 
 
+app.use('/api/', Router);
  
 
 
