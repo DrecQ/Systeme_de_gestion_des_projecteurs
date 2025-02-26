@@ -14,7 +14,7 @@ const app = express();
 app.use(express.json());
 
 
-//Fonction pour créer la base de données et les tables 
+//Fonctions pour créer la base de données et les tables 
  
   async function initDatabase()
   {
