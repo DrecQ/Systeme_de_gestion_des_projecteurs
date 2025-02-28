@@ -38,7 +38,7 @@ app.get('/api', (req, res) => {
 });
 
 
-app.use('/api/', Router);
+app.use('/', Router);
 /**
  * Pour l'inscription [POST /api/register]
  * Pour la connexion [POST /api/login]
