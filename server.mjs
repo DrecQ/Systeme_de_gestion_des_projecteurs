@@ -37,6 +37,11 @@ app.get('/api', (req, res) => {
   res.status(200).send('Serveur en cours d\'execution');
 });
 
+// Routes protégées (nécessitent un token JWT)
+app.use('/api/profile', authenticate); // Protège le profil utilisateur
+app.use('/api/reservations', authenticate); // Protège la gestion des réservations
+
+
 
 app.use('/', Router);
 /**
