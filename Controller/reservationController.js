@@ -1,17 +1,6 @@
 import * as queries from "../queries/reservationsQueries.js";
 import pool from "../Config/dbConnexion.js";
 
-
-// Fonction pour vérifier les rôles autorisés
-export function authorizeRole(allowedRoles) {
-    return (req, res, next) => {
-        if (!allowedRoles.includes(req.user.role)) {
-            return res.status(403).json({ success: false, message: "Accès refusé. Vous n'avez pas les droits pour effectuer cette action." });
-        }
-        next(); 
-    };
-}
-
 // Ajouter une réservation
 export async function addReservation(req, res) {
     let { user_id, projector_id, debut_emprunt, fin_emprunt } = req.body;
