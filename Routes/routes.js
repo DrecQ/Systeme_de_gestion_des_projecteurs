@@ -3,7 +3,8 @@ import register from "../Controller/userRegisterController.js";
 import loginUser from "../Controller/userLoginController.js";
 import * as projectorController from "../Controller/projectorController.js";
 import * as reservationController from "../Controller/reservationController.js";
-import { getUserProfile } from "../Controller/userProfileController.js"; 
+import { getUserProfile } from "../Controller/userProfileController.js";
+import { authenticate } from "../Middlewares/authMiddleware.js";
 
 
 

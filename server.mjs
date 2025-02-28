@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import {createProjectorTable} from './Models/projectorModel.js';
 import {createUserTable} from './Models/usersModel.js';
 import { createReservationTable } from './Models/reservationModel.js';
+import { authenticate } from './Middlewares/authMiddleware.js';
 import Router from './Routes/routes.js';
 
 //Utilisation des variables d'environnement
@@ -33,13 +34,18 @@ app.use(express.json());
 
 //Routes 
 //Route pour tester l'etat du serveur
-app.get('/api', (req, res) => {
+app.get('/', (req, res) => {
   res.status(200).send('Serveur en cours d\'execution');
 });
 
+//Route pour l'inscription et la connexion
+app.use('/register', Router);
+app.use('/login', Router);
+
+
 // Routes protégées (nécessitent un token JWT)
-app.use('/api/profile', authenticate); // Protège le profil utilisateur
-app.use('/api/reservations', authenticate); // Protège la gestion des réservations
+app.use('/profile', authenticate);
+app.use('/reservations', authenticate);
 
 
 
