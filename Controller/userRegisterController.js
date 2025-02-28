@@ -1,6 +1,6 @@
 import { getUserEmail, registerUser } from "../queries/userQueries.js";
 
-// Inscription d'un utilisateur
+// Recuperation de l'eail et du mot de passe 
 export async function register(req, res) {
     try {
         const { email, password, role = 'etudiant' } = req.body;  // Ajout du role avec une valeur par défaut
@@ -15,7 +15,7 @@ export async function register(req, res) {
             return res.status(400).json({ success: false, message: "Cet email existe déjà" });
         }
 
-        // Enregistrer les données utilisateur
+        // Sauvegarde de l'utilisateur avec le mot de passe hacher dans la base de données 
         await registerUser(email, password, role);
 
         return res.status(201).json({ success: true, message: "Utilisateur inscrit avec succès" });

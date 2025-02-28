@@ -19,25 +19,34 @@ app.use(express.json());
  
   async function initDatabase()
   {
-      //Creation de la table users
+      //Fonction pour la creation de la table [users]
       await createUserTable();
 
-      //Creation de la table projectors 
+      //Fonction pour la creation de la table [projectors]
       await createProjectorTable();
 
-      //Création de la table reservations 
+      //Fonction pour la creation de la table [reservations]
       await createReservationTable();
   }
 
   initDatabase();
 
 //Routes 
-app.get('/', (req, res) => {
+//Route pour tester l'etat du serveur
+app.get('/api', (req, res) => {
   res.status(200).send('Serveur en cours d\'execution');
 });
 
 
 app.use('/api/', Router);
+/**
+ * Pour l'inscription [POST /api/register]
+ * Pour la connexion [POST /api/login]
+ */
+
+
+
+
  
 
 
