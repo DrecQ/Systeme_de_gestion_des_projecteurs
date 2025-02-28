@@ -4,7 +4,7 @@ import {createProjectorTable} from './Models/projectorModel.js';
 import {createUserTable} from './Models/usersModel.js';
 import { createReservationTable } from './Models/reservationModel.js';
 import { authenticate } from './Middlewares/authMiddleware.js';
-import Router from './Routes/routes.js';
+import router from './Routes/routes.js';
 
 //Utilisation des variables d'environnement
 dotenv.config();
@@ -39,8 +39,8 @@ app.get('/', (req, res) => {
 });
 
 //Route pour l'inscription et la connexion
-app.use('/register', Router);
-app.use('/login', Router);
+app.use('/register', router);
+app.use('/login', router);
 
 
 // Routes protégées (nécessitent un token JWT)
@@ -49,7 +49,7 @@ app.use('/reservations', authenticate);
 
 
 
-app.use('/', Router);
+app.use('/', router);
 /**
  * Pour l'inscription [POST /api/register]
  * Pour la connexion [POST /api/login]
