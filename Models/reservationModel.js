@@ -8,9 +8,11 @@ export async function createReservationTable() {
     try {
         await pool.query(`
             CREATE TABLE IF NOT EXISTS reservations (
-                id INT AUTO_INCREMENT PRIMARY KEY,
+                reservation_id INT AUTO_INCREMENT PRIMARY KEY,
                 user_id INT NOT NULL,
                 projector_id INT NOT NULL,
+                reservation_date DATE NOT NULL,
+                status ENUM('reserved', 'available') DEFAULT 'available',
                 debut_emprunt DATETIME NOT NULL,
                 fin_emprunt DATETIME NOT NULL,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
