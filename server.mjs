@@ -1,5 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
+
+import { register } from './Controller/userRegisterController.js';
 import {createProjectorTable} from './Models/projectorModel.js';
 import {createUserTable} from './Models/usersModel.js';
 import { createReservationTable } from './Models/reservationModel.js';
@@ -37,7 +39,8 @@ app.get('/', (req, res) => {
 
 
  
-
+// Route d'inscription
+app.post('/register', register);
 
 
 //Gestion du port 
