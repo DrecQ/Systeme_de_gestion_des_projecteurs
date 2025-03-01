@@ -1,8 +1,21 @@
 import pool from "../Config/dbConnexion.js";
+import reservationModel from "../Models/reservationModel.js";
 
 // Ajouter une réservation
 export async function createReservation(user_id, projector_id, debut_emprunt, fin_emprunt) {
     try {
+        // Si debut_emprunt n'est pas fourni, on prend la date actuelle
+        if (!debut_emprunt) {
+            debut_emprunt = new Date().toISOString();
+        }
+
+        // Si fin_emprunt n'est pas fourni, on ajoute 4 heures à debut_emprunt
+        if (!fin_emprunt) {
+            const debutDate = new Date(debut_emprunt);
+            debutDate.setHours(debutDate.getHours() + 4);  // Ajoute 4 heures à debut_emprunt
+            fin_emprunt = debutDate.toISOString();
+        }
+
         const connection = await pool.getConnection();
 
         const sql = `
@@ -63,6 +76,13 @@ export async function getReservationById(reservation_id) {
 // Mettre à jour une réservation
 export async function updateReservation(reservation_id, debut_emprunt, fin_emprunt) {
     try {
+        // Si fin_emprunt n'est pas fourni, on ajoute 4 heures à debut_emprunt
+        if (!fin_emprunt) {
+            const debutDate = new Date(debut_emprunt);
+            debutDate.setHours(debutDate.getHours() + 4);  // Ajoute 4 heures à debut_emprunt
+            fin_emprunt = debutDate.toISOString();
+        }
+
         const connection = await pool.getConnection();
         const sql = `
             UPDATE reservations
@@ -79,7 +99,7 @@ export async function updateReservation(reservation_id, debut_emprunt, fin_empru
     }
 }
 
-//Supprimer une réservation
+// Supprimer une réservation
 export async function deleteReservation(reservation_id) {
     try {
         const connection = await pool.getConnection();
