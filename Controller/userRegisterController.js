@@ -1,4 +1,3 @@
-import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { getUserEmail, registerUser } from "../queries/userQueries.js";
 
@@ -17,11 +16,8 @@ export async function register(req, res) {
             return res.status(400).json({ success: false, message: "Cet email existe déjà" });
         }
 
-         // Hachage du mot de passe avec bcrypt
-         const hashedPassword = await bcrypt.hash(password, 10);
-
-         // Enregistrer l'utilisateur en base de données
-         const { success, message } = await registerUser(email, hashedPassword, role);
+         // Enregistrer l'utilisateur en base de données sans hachage
+         const { success, message } = await registerUser(email, password, role);
  
          if (!success) {
              return res.status(500).json({ success: false, message });

@@ -1,6 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 
+import { login } from './Controller/userLoginController.js';
 import { register } from './Controller/userRegisterController.js';
 import {createProjectorTable} from './Models/projectorModel.js';
 import {createUserTable} from './Models/usersModel.js';
@@ -42,6 +43,9 @@ app.get('/', (req, res) => {
 // Route d'inscription
 app.post('/register', register);
 
+// Route de connexion
+app.post('/login', login);
+
 
 //Gestion du port 
 const port = process.env.PORT || 3000;
@@ -52,3 +56,4 @@ app.listen(port, '127.0.0.1', () => {
 });
 
 // run with `node server.mjs`
+
