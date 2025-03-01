@@ -1,6 +1,6 @@
 import express from "express";
-import {authMiddleware } from "../Middlewares/authMiddleware.js"; // Chemin vers ton middleware d'authentification
-import { getUserById } from "../queries/userQueries.js"; // Import de la fonction pour récupérer un utilisateur par ID
+import {authMiddleware } from "../Middlewares/authMiddleware.js"; 
+import { getUserById } from "../queries/userQueries.js";
 
 const router = express.Router();
 

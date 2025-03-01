@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-// Création de la table de réservation des projecteurs
+// Création de la table de réservation
 export async function createReservationTable() {
     try {
         await pool.query(`

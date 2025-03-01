@@ -1,7 +1,7 @@
 import * as queries from "../queries/reservationsQueries.js";
 import pool from "../Config/dbConnexion.js";
 
-// Ajouter une réservation
+// Pour ajouter une réservation
 export async function addReservation(req, res) {
     try {
         let { user_id, projector_id, debut_emprunt, fin_emprunt } = req.body;

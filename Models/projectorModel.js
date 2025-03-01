@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-//Creation de la table Utilisateurs
+//Creation de la table des projeteurs
 
 export async function createProjectorTable(){
 

@@ -1,10 +1,12 @@
 
 import { getUserEmail, registerUser } from "../queries/userQueries.js";
 
-// Recuperation de l'eail et du mot de passe 
+// Recuperation de l'email et du mot de passe 
 export async function register(req, res) {
     try {
-        const { email, password, role = 'etudiant' } = req.body;  // Ajout du role avec une valeur par défaut
+
+        // Ajout du role avec etudiant par défaut
+        const { email, password, role = 'etudiant' } = req.body;  
 
         if (!email || !password) {
             return res.status(400).json({ success: false, message: "Email ou mot de passe requis !" });
