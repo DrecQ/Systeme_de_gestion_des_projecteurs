@@ -46,12 +46,11 @@ export async function getUserById(user_id) {
     }
 }
 
-// Récupérer un utilisateur par email
+//Récupérer l'email d'un utilisateur 
 export async function getUserEmail(email) {
     try {
         const connection = await pool.getConnection();
-
-        const sql = `SELECT * FROM users WHERE email = ?`;
+        const sql = `SELECT user_id, email, password, role, created_at FROM users WHERE email = ?`;  // Ajout du champ "password"
         const [rows] = await connection.query(sql, [email]);
 
         connection.release();
@@ -66,6 +65,7 @@ export async function getUserEmail(email) {
         throw new Error(err.message);
     }
 }
+
 
 //Mettre à jour un utilisateur (email et rôle)
 export async function updateUser(user_id, email, role) {

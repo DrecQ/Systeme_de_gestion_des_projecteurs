@@ -1,43 +1,47 @@
-import { createProjector, getAllProjectors, getProjectorById, updateProjector, deleteProjector } from "../queries/projectorsQueries.js";
+
+import * as queries from "../queries/projectorsQueries.js";
+
 
 // Ajouter un projecteur
 export async function addProjector(req, res) {
     try {
         const { nom_projector, batiment, etat } = req.body;
-        const result = await createProjector(nom_projector, batiment, etat);
-        if (result.success) {
-            res.status(201).json({ success: true, message: result.message, id: result.insertId });
-        } else {
-            res.status(500).json({ success: false, error: result.error });
+        if (!nom_projector || !batiment) {
+            return res.status(400).json({ success: false, message: "Nom du projecteur et bâtiment requis" });
         }
+
+        const result = await queries.createProjector(nom_projector, batiment, etat);
+        return res.status(201).json(result);
     } catch (err) {
-        res.status(500).json({ success: false, error: err.message });
+        return res.status(500).json({ success: false, error: err.message });
     }
 }
 
-// Lister les projecteurs
+// Lister tous les projecteurs
 export async function listProjectors(req, res) {
     try {
-        const projectors = await getAllProjectors();
-        res.json(projectors);
+        const projectors = await queries.getAllProjectors();
+        return res.status(200).json({ success: true, projectors });
     } catch (err) {
-        res.status(500).json({ success: false, error: err.message });
+        return res.status(500).json({ success: false, error: err.message });
     }
 }
 
-// Modifier un projecteur
+// Modifier l'état d'un projecteur
 export async function modifyProjector(req, res) {
     try {
-        const { nom_projector, batiment, etat } = req.body;
         const { id } = req.params;
-        const result = await updateProjector(id, nom_projector, batiment, etat);
-        if (result.success) {
-            res.json({ success: true, message: result.message });
-        } else {
-            res.status(404).json({ success: false, message: result.message });
+        const { nom_projector, batiment, etat } = req.body;
+
+        if (!etat) {
+            return res.status(400).json({ success: false, message: "L'état du projecteur est requis" });
         }
+
+        const result = await queries.updateProjector(id, nom_projector, batiment, etat);
+        return res.status(200).json(result);
     } catch (err) {
-        res.status(500).json({ success: false, error: err.message });
+        return res.status(500).json({ success: false, error: err.message });
+
     }
 }
 
@@ -45,13 +49,12 @@ export async function modifyProjector(req, res) {
 export async function removeProjector(req, res) {
     try {
         const { id } = req.params;
-        const result = await deleteProjector(id);
-        if (result.success) {
-            res.json({ success: true, message: result.message });
-        } else {
-            res.status(404).json({ success: false, message: result.message });
-        }
+        const result = await queries.deleteProjector(id);
+        return res.status(200).json(result);
     } catch (err) {
-        res.status(500).json({ success: false, error: err.message });
+        return res.status(500).json({ success: false, error: err.message });
     }
 }
+
+export default { addProjector, listProjectors, modifyProjector, removeProjector };
+
