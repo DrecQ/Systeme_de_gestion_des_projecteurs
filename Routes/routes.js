@@ -1,6 +1,6 @@
 import express from "express";
-import register from "../Controller/userRegisterController.js";
-import loginUser from "../Controller/userLoginController.js";
+import {register} from "../Controller/userRegisterController.js";
+import {loginUser} from "../Controller/userLoginController.js";
 import * as projectorController from "../Controller/projectorController.js";
 import * as reservationController from "../Controller/reservationController.js";
 import { getUserProfile } from "../Controller/userProfileController.js";

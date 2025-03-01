@@ -1,5 +1,5 @@
 import express from "express";
-import { authenticateToken } from "../Middlewares/authmiddleware.js"; // Assure-toi que le token est validé
+import { authenticateToken } from "../Middlewares/authMiddleware.js"; // Assure-toi que le token est validé
 import { isAdmin } from "../Middlewares/roleMiddleware.js"; // Vérifie si l'utilisateur est administrateur
 import { deleteUser } from "../queries/userQueries.js"; // Exemple de fonction pour supprimer un utilisateur
 

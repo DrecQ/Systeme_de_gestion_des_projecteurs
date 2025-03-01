@@ -1,48 +1,48 @@
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import pool from "../Config/dbConnexion.js";
 
 dotenv.config();
 
-// Fonction pour vérifier et décoder le token
-export const authenticateToken = (req) => {
-    const authHeader = req.headers.authorization;
+export function authenticate(req, res, next) {
+    // Récupère le token après "Bearer"
+    const token = req.headers.authorization?.split(" ")[1];
 
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-        throw new Error("Accès non autorisé, token manquant");
+    // Vérifie si le token est présent
+    if (!token) {
+        return res.status(401).json({ success: false, message: "Accès refusé. Aucun token fourni." });
     }
 
-    const token = authHeader.split(" ")[1];
+    // Vérifie que la clé secrète existe dans l'environnement
+    if (!process.env.JWT_SECRET) {
+        return res.status(500).json({ success: false, message: "Clé secrète pour le JWT non définie." });
+    }
 
     try {
-        return jwt.verify(token, process.env.JWT_SECRET);
+        // Vérifie et décode le token avec la clé secrète
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+        // Ajoute les informations utilisateur (userId, role, etc.) à req.user
+        req.user = decoded;
+
+        next();  // Passe à la suite du traitement
     } catch (err) {
-        throw new Error("Token invalide ou expiré");
+        // Log de l'erreur pour un meilleur debug en développement (ne pas exposer en prod)
+        console.error("Erreur lors de la vérification du token:", err.message);
+        return res.status(403).json({ success: false, message: "Token invalide ou expiré" });
     }
-};
+}
 
-// Middleware d'authentification
-export const authMiddleware = async (req, res, next) => {
-    try {
-        // Vérifier et décoder le token
-        const decoded = authenticateToken(req);
-
-        // Récupérer l'utilisateur depuis la base de données
-        const connection = await pool.getConnection();
-        await connection.query(`USE \`${process.env.DB_NAME}\`;`);
-        const [users] = await connection.query("SELECT * FROM users WHERE user_id = ?", [decoded.user_id]);
-        connection.release();
-
-        if (users.length === 0) {
-            return res.status(401).json({ message: "Utilisateur non trouvé" });
+// Fonction pour vérifier les rôles autorisés
+export function authorizeRole(allowedRoles) {
+    return (req, res, next) => {
+        // Vérifie si le rôle de l'utilisateur est défini et s'il est inclus dans les rôles autorisés
+        if (!req.user || !allowedRoles.includes(req.user.role)) {
+            return res.status(403).json({ success: false, message: "Accès refusé. Vous n'avez pas les droits pour effectuer cette action." });
         }
 
-        req.user = users[0]; // Attacher l'utilisateur à la requête
-        next(); // Passer au contrôleur suivant
+        // Si l'utilisateur a un rôle autorisé, on passe au middleware suivant
+        next(); 
+    };
+}
 
-    } catch (err) {
-        return res.status(401).json({ message: err.message });
-    }
-};
-
-
+export default {authenticate, authorizeRole};
