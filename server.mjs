@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import { login } from './Controller/userLoginController.js';
 import { register } from './Controller/userRegisterController.js';
 import { addProjector, listProjectors, modifyProjector, removeProjector } from './Controller/projectorController.js';
+import { addReservation, listReservations, cancelReservation } from './Controller/reservationController.js';
 import {createProjectorTable} from './Models/projectorModel.js';
 import {createUserTable} from './Models/usersModel.js';
 import { createReservationTable } from './Models/reservationModel.js';
@@ -53,6 +54,10 @@ app.get('/projectors', listProjectors);
 app.put('/projectors/:id', modifyProjector);
 app.delete('/projectors/:id', removeProjector);
 
+// Routes pour les réservations
+app.post('/reservations', addReservation);
+app.get('/reservations', listReservations);
+app.delete('/reservations/:id', cancelReservation)
 
 //Gestion du port 
 const port = process.env.PORT || 3000;
