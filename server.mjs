@@ -8,6 +8,11 @@ import { addReservation, listReservations, cancelReservation } from './Controlle
 import {createProjectorTable} from './Models/projectorModel.js';
 import {createUserTable} from './Models/usersModel.js';
 import { createReservationTable } from './Models/reservationModel.js';
+import userProfileRoute from "./routes/userProfileRoute.js";
+import adminRoute from "./routes/adminRoute.js";
+
+
+
 
 //Utilisation des variables d'environnement
 dotenv.config();
@@ -17,6 +22,8 @@ const app = express();
 
 //Middlewares
 app.use(express.json());
+app.use("/api", userProfileRoute);
+app.use("/api",adminRoute);
 
 
 //Fonctions pour créer la base de données et les tables 
