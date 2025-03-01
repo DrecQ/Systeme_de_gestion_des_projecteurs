@@ -1,13 +1,10 @@
 import express from 'express';
 import dotenv from 'dotenv';
-
-
 import {createProjectorTable} from './Models/projectorModel.js';
 import {createUserTable} from './Models/usersModel.js';
 import { createReservationTable } from './Models/reservationModel.js';
+import { authenticate } from './Middlewares/authMiddleware.js';
 import router from './Routes/routes.js';
-
-
 
 //Utilisation des variables d'environnement
 dotenv.config();
@@ -17,6 +14,9 @@ const app = express();
 
 //Middlewares
 app.use(express.json());
+//(nécessitent un token JWT)
+app.use('/profile', authenticate);
+app.use('/reservations', authenticate);
 
 
 
@@ -24,41 +24,43 @@ app.use(express.json());
  
   async function initDatabase()
   {
-      //Creation de la table users
+      //Fonction pour la creation de la table [users]
       await createUserTable();
 
-      //Creation de la table projectors 
+      //Fonction pour la creation de la table [projectors]
       await createProjectorTable();
 
-      //Création de la table reservations 
+      //Fonction pour la creation de la table [reservations]
       await createReservationTable();
   }
 
   initDatabase();
 
 //Routes 
+//Route pour tester l'etat du serveur
 app.get('/', (req, res) => {
   res.status(200).send('Serveur en cours d\'execution');
 });
 
+//Route pour l'inscription et la connexion
+app.use('/register', router);
+app.use('/login', router);
+
+
+
+
+app.use('/', router);
+/**
+ * Pour l'inscription [POST /api/register]
+ * Pour la connexion [POST /api/login]
+ */
+
+
+
 
  
-// Route d'inscription
-app.post('/register', register);
 
-// Route de connexion
-app.post('/login', login);
 
-// Routes pour les projecteurs
-app.post('/projectors', addProjector);
-app.get('/projectors', listProjectors);
-app.put('/projectors/:id', modifyProjector);
-app.delete('/projectors/:id', removeProjector);
-
-// Routes pour les réservations
-app.post('/reservations', addReservation);
-app.get('/reservations', listReservations);
-app.delete('/reservations/:id', cancelReservation)
 
 //Gestion du port 
 const port = process.env.PORT || 3000;
@@ -69,4 +71,3 @@ app.listen(port, '127.0.0.1', () => {
 });
 
 // run with `node server.mjs`
-
