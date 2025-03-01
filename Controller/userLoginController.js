@@ -1,13 +1,9 @@
-import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import dotenv from "dotenv";
-import { getUserEmail } from "../queries/userQueries";
-
-
+import { getUserEmail } from "../queries/userQueries.js";
+import dotenv from 'dotenv';
 dotenv.config();
 
-
-export async function loginUser(req, res) {
+export async function login(req, res) {
     try {
         const { email, password } = req.body;
 
@@ -16,17 +12,18 @@ export async function loginUser(req, res) {
         }
 
         const user = await getUserEmail(email);
+
         if (!user) {
-            return res.status(400).json({ success: false, message: "Utilisateur non trouvé" });
+            return res.status(401).json({ success: false, message: "Email ou mot de passe incorrect" });
         }
 
-        // Comparaison des mots de passe avec bcrypt
-        const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) {
-            return res.status(400).json({ success: false, message: "Mot de passe incorrect." });
+        // Comparaison des mots de passe 
+        if (password !== user.password) {
+            return res.status(401).json({ success: false, message: "Email ou mot de passe incorrect" });
         }
 
-        const token = jwt.sign({ userId: user.user_id, role: user.role }, process.env.JWT_SECRET, { expiresIn: "1h" });
+        // Génération du token JWT
+        const token = jwt.sign({ userId: user.user_id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
         return res.status(200).json({ success: true, token });
 

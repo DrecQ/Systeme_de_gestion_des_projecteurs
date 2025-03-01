@@ -1,42 +1,53 @@
-import pool from "../Config/dbConnexion.js";
+import { createReservation, getAllReservations, deleteReservation } from "../queries/reservationsQueries.js";
+import { getProjectorById } from "../queries/projectorsQueries.js";
 
-// Vérifier la disponibilité d'un projecteur
-export async function checkProjectorAvailability(projectorId) {
+// Réserver un projecteur
+export async function addReservation(req, res) {
     try {
-        const connection = await pool.getConnection();
-        const sql = `SELECT * FROM reservations WHERE projector_id = ? AND status = 'reserved'`;
-        const [rows] = await connection.query(sql, [projectorId]);
+        const { user_id, projector_id, debut_emprunt, fin_emprunt } = req.body;
 
-        connection.release();
-        return rows.length === 0; // Si aucune réservation n'est trouvée, c'est disponible
+        // Vérifier si le projecteur existe
+        const projector = await getProjectorById(projector_id);
+        if (!projector) {
+            return res.status(400).json({ success: false, message: "Projecteur introuvable" });
+        }
+
+        // Vérifier si le projecteur est disponible (vous pouvez ajouter une logique de vérification de disponibilité ici)
+
+        // Insérer la réservation
+        const result = await createReservation(user_id, projector_id, debut_emprunt, fin_emprunt);
+        if (result.success) {
+            res.status(201).json({ success: true, message: result.message, id: result.insertId });
+        } else {
+            res.status(500).json({ success: false, error: result.error });
+        }
+
     } catch (err) {
-        console.error("Erreur lors de la vérification de la disponibilité :", err.message);
-        return false;
+        res.status(500).json({ success: false, error: err.message });
     }
 }
 
-// Réserver un projecteur
-export async function reserveProjector(req, res) {
-    const { projectorId, userId, reservationDate } = req.body;
-
-    // Vérifier la disponibilité du projecteur
-    const isAvailable = await checkProjectorAvailability(projectorId);
-
-    if (!isAvailable) {
-        return res.status(400).json({ success: false, message: "Le projecteur est déjà réservé." });
-    }
-
+// Lister les réservations
+export async function listReservations(req, res) {
     try {
-        const connection = await pool.getConnection();
-
-        // Enregistrer la réservation
-        const sql = `INSERT INTO reservations (projector_id, user_id, reservation_date, status) VALUES (?, ?, ?, 'reserved')`;
-        const [result] = await connection.query(sql, [projectorId, userId, reservationDate]);
-
-        connection.release();
-        return res.status(200).json({ success: true, message: "Réservation réussie", reservationId: result.insertId });
+        const reservations = await getAllReservations();
+        res.json(reservations);
     } catch (err) {
-        console.error("Erreur lors de la réservation du projecteur :", err.message);
-        return res.status(500).json({ success: false, error: err.message });
+        res.status(500).json({ success: false, error: err.message });
+    }
+}
+
+// Annuler une réservation
+export async function cancelReservation(req, res) {
+    try {
+        const { id } = req.params;
+        const result = await deleteReservation(id);
+        if (result.success) {
+            res.json({ success: true, message: result.message });
+        } else {
+            res.status(404).json({ success: false, message: result.message });
+        }
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
     }
 }

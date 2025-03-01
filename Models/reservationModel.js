@@ -18,8 +18,8 @@ export async function createReservationTable() {
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
                 FOREIGN KEY (projector_id) REFERENCES projectors(projector_id) ON DELETE CASCADE
-            );
-        `);
+            );`
+        );
 
         console.log("La table [reservations] a été créée avec succès !");
     } catch (err) {
