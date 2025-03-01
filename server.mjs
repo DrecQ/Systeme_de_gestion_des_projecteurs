@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 
 import { login } from './Controller/userLoginController.js';
 import { register } from './Controller/userRegisterController.js';
+import { addProjector, listProjectors, modifyProjector, removeProjector } from './Controller/projectorController.js';
 import {createProjectorTable} from './Models/projectorModel.js';
 import {createUserTable} from './Models/usersModel.js';
 import { createReservationTable } from './Models/reservationModel.js';
@@ -45,6 +46,12 @@ app.post('/register', register);
 
 // Route de connexion
 app.post('/login', login);
+
+// Routes pour les projecteurs
+app.post('/projectors', addProjector);
+app.get('/projectors', listProjectors);
+app.put('/projectors/:id', modifyProjector);
+app.delete('/projectors/:id', removeProjector);
 
 
 //Gestion du port 
