@@ -1,7 +1,7 @@
 {
   "name": "systeme_de_gestion_des_projecteurs",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.mjs",
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

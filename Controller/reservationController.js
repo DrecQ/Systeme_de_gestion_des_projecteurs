@@ -104,3 +104,4 @@ export async function cancelReservation(req, res) {
 }
 
 export default { addReservation, listReservations, cancelReservation };
+
