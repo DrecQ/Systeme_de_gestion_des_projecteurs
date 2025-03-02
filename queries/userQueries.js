@@ -1,16 +1,12 @@
 import pool from "../Config/dbConnexion.js";
-import bcrypt from "bcrypt";
 
 //Ajouter un utilisateur (Register)
 export async function registerUser(email, password, role) {
     try {
         const connection = await pool.getConnection();
 
-        // Hash du mot de passe avant insertion
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        const sql = `INSERT INTO users (email, password, role) VALUES (?, ?, ?)`;
-        const [result] = await connection.query(sql, [email, hashedPassword, role]);
+        const sql = 'INSERT INTO users (email, password, role) VALUES (?, ?, ?)';
+        const [result] = await connection.query(sql, [email, password, role]);
 
         connection.release();
         return { success: true, message: "Utilisateur enregistré avec succès", insertId: result.insertId };
@@ -58,10 +54,15 @@ export async function getUserEmail(email) {
         const [rows] = await connection.query(sql, [email]);
 
         connection.release();
-        return rows.length ? rows[0] : null;
+
+        if (rows.length === 0) {
+            return null;  // Aucun utilisateur trouvé
+        }
+
+        return rows[0];  // Retourner l'utilisateur trouvé
     } catch (err) {
-        console.error("Erreur lors de la récupération de l'email :", err.message);
-        return null;
+        console.error("Erreur lors de la récupération de l'utilisateur :", err.message);
+        throw new Error(err.message);
     }
 }
 

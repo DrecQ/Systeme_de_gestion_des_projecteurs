@@ -1,4 +1,6 @@
+
 import * as queries from "../queries/projectorsQueries.js";
+
 
 // Ajouter un projecteur
 export async function addProjector(req, res) {
@@ -39,6 +41,7 @@ export async function modifyProjector(req, res) {
         return res.status(200).json(result);
     } catch (err) {
         return res.status(500).json({ success: false, error: err.message });
+
     }
 }
 
@@ -54,3 +57,4 @@ export async function removeProjector(req, res) {
 }
 
 export default { addProjector, listProjectors, modifyProjector, removeProjector };
+

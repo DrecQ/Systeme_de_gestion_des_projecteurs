@@ -1,8 +1,14 @@
 import express from 'express';
 import dotenv from 'dotenv';
+
+import { login } from './Controller/userLoginController.js';
+import { register } from './Controller/userRegisterController.js';
+import { addProjector, listProjectors, modifyProjector, removeProjector } from './Controller/projectorController.js';
+import { addReservation, listReservations, cancelReservation } from './Controller/reservationController.js';
 import {createProjectorTable} from './Models/projectorModel.js';
 import {createUserTable} from './Models/usersModel.js';
 import { createReservationTable } from './Models/reservationModel.js';
+
 import { authenticate } from './Middlewares/authMiddleware.js';
 import router from './Routes/routes.js';
 
@@ -14,6 +20,8 @@ const app = express();
 
 //Middlewares
 app.use(express.json());
+app.use("/api", userProfileRoute);
+app.use("/api",adminRoute);
 
 
 //Fonctions pour créer la base de données et les tables 
@@ -59,8 +67,22 @@ app.use('/', router);
 
 
  
+// // Route d'inscription
+// app.post('/register', register);
 
+// // Route de connexion
+// app.post('/login', login);
 
+// // Routes pour les projecteurs
+// app.post('/projectors', addProjector);
+// app.get('/projectors', listProjectors);
+// app.put('/projectors/:id', modifyProjector);
+// app.delete('/projectors/:id', removeProjector);
+
+// // Routes pour les réservations
+// app.post('/reservations', addReservation);
+// app.get('/reservations', listReservations);
+// app.delete('/reservations/:id', cancelReservation)
 
 //Gestion du port 
 const port = process.env.PORT || 3000;
@@ -71,3 +93,4 @@ app.listen(port, '127.0.0.1', () => {
 });
 
 // run with `node server.mjs`
+
