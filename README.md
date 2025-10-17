@@ -15,6 +15,4 @@
    - bcrypt
    - jsonwebtoken
  
- ## [Etudiant 1] : QUIST Evariste
- ## [Etudiant 2] : SETTIN Fourier
- ## [Etudiant 3] : SASSE Elisée
+
